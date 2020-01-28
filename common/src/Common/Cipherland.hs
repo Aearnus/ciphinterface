@@ -6,8 +6,8 @@
 module Common.Cipherland where
 
 import Data.Function
+import Data.Maybe
 import Data.Char
-import Data.String
 import Control.Lens
 
 type Stringrep = Iso' String [Integer]
@@ -43,5 +43,6 @@ zmodMultInv n group
   | gcd n group == 1 = Just (head [nmin | nmin <- [1..], n * nmin `mod` group == 1])
   | otherwise = Nothing
 
+-- todo: custom mod value
 affine :: Cipher (Integer, Integer)
-affine (m, b) = iso (fmap (\x -> m * x + b)) (fmap (\x -> fromJust (zmodMultInv m) * (x - b)))
+affine (m, b) = iso (fmap (\x -> m * x + b)) (fmap (\x -> fromJust (zmodMultInv m 26) * (x - b)))
